@@ -32,8 +32,37 @@ func TestReplacement(t *testing.T) {
 		expected string
 	}{
 		{"replacement from {{ .Map }}", map[string]string{"Map": "any map"}, "replacement from any map"},
-		{"replacement from {{ .Struct }}", struct{ Struct string }{Struct: "any struct"}, "replacement from any struct"},
+		{"replacement from {{ .Struct }} and {{ .Struct }} really", struct{ Struct string }{Struct: "any struct"}, "replacement from any struct and any struct really"},
 		{"replacement from string {{ . }}", "this is given here", "replacement from string this is given here"},
+	}
+
+	for _, tt := range tests {
+		actual, err := Eval(tt.input, tt.data)
+		assert.Nil(t, err)
+		assert.Equal(t, tt.expected, actual, "they should be equal")
+	}
+}
+
+func TestAdvanced(t *testing.T) {
+	var tests = []struct {
+		input    string
+		data     interface{}
+		expected string
+	}{
+		{"Dear {{ if .Male }}Mr.{{ else }}Mrs.{{ end }} {{ .Name -}} !", struct {
+			Male bool
+			Name string
+		}{
+			Male: false,
+			Name: "Scully",
+		}, "Dear Mrs. Scully!"},
+		{"Dear {{ if .Male }}Mr.{{ else }}Mrs.{{ end }} {{ .Name -}} !", struct {
+			Male bool
+			Name string
+		}{
+			Male: true,
+			Name: "Scully",
+		}, "Dear Mr. Scully!"},
 	}
 
 	for _, tt := range tests {
