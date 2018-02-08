@@ -5,6 +5,7 @@ import (
 	"html/template"
 )
 
+// Eval applies Golang's text templating functions on a string with given data and returns the resulting string.
 func Eval(templateString string, data interface{}) (output string, err error) {
 	var outputBuffer bytes.Buffer
 	t, err := template.New("tmpl").Parse(templateString)
@@ -19,6 +20,8 @@ func Eval(templateString string, data interface{}) (output string, err error) {
 	return
 }
 
+// MustEval applies Golang's text templating functions on a string with given data and returns the resulting string.
+// In case of errors on the way, this function panics.
 func MustEval(templateString string, data interface{}) (output string) {
 	var err error
 	output, err = Eval(templateString, data)
