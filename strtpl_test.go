@@ -16,6 +16,7 @@ func TestWithoutReplacement(t *testing.T) {
 		{"standard string", nil, "standard string"},
 		{"", false, ""},
 		{"my string close to a { .Template }", map[string]string{"Template": "content"}, "my string close to a { .Template }"},
+		{"<html>{{ .Content }}</html>", map[string]string{"Content": "<b>test</b>"}, "<html><b>test</b></html>"},
 	}
 
 	for _, tt := range tests {
@@ -72,6 +73,25 @@ func TestAdvanced(t *testing.T) {
 	}
 }
 
+func TestAdvancedHTML(t *testing.T) {
+	var tests = []struct {
+		input      string
+		data       interface{}
+		expected   string
+		expectFail bool
+	}{
+		{"<html>{{ .Content }}</html>", map[string]string{"Content": "<b>test</b>"}, "<html>&lt;b&gt;test&lt;/b&gt;</html>", false},
+		{"No valid template {{ .Data ", nil, "", true},
+		{"No valid data {{ .Data }}", struct{}{}, "", true},
+	}
+
+	for _, tt := range tests {
+		actual, err := EvalHTML(tt.input, tt.data)
+		assert.Equal(t, tt.expectFail, err != nil)
+		assert.Equal(t, tt.expected, actual, "they should be equal")
+	}
+}
+
 func TestWithInvalidTemplate(t *testing.T) {
 	var tests = []struct {
 		input string
@@ -122,4 +142,28 @@ func TestMustEvalFail(t *testing.T) {
 		}
 	}()
 	MustEval("abc {{ .invalid", nil)
+}
+
+func TestMustEvalHTML(t *testing.T) {
+	var tests = []struct {
+		input    string
+		data     interface{}
+		expected string
+	}{
+		{"no replacement", map[string]string{"Map": "any map"}, "no replacement"},
+	}
+
+	for _, tt := range tests {
+		actual := MustEvalHTML(tt.input, tt.data)
+		assert.Equal(t, tt.expected, actual, "they should be equal")
+	}
+}
+
+func TestMustEvalHTMLFail(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
+	MustEvalHTML("abc {{ .invalid", nil)
 }
