@@ -2,7 +2,10 @@ package strtpl
 
 import (
 	"fmt"
+	htmlTemplate "html/template"
+	"strings"
 	"testing"
+	textTemplate "text/template"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -155,6 +158,52 @@ func TestMustEvalHTML(t *testing.T) {
 
 	for _, tt := range tests {
 		actual := MustEvalHTML(tt.input, tt.data)
+		assert.Equal(t, tt.expected, actual, "they should be equal")
+	}
+}
+
+func TestMustEvalWithFuncMap(t *testing.T) {
+	revFunc := textTemplate.FuncMap{"upper": func(input string) string { return strings.ToUpper(input) }}
+	data := map[string]string{
+		"fruit": "bananas",
+	}
+
+	var tests = []struct {
+		input    string
+		funcMap  textTemplate.FuncMap
+		data     interface{}
+		expected string
+	}{
+		{"no replacement", revFunc, data, "no replacement"},
+		{`abc{{ "dEf" | upper }}ghi`, revFunc, data, "abcDEFghi"},
+		{`I want {{ upper .fruit }}.`, revFunc, data, "I want BANANAS."},
+	}
+
+	for _, tt := range tests {
+		actual := MustEvalWithFuncMap(tt.input, tt.funcMap, tt.data)
+		assert.Equal(t, tt.expected, actual, "they should be equal")
+	}
+}
+
+func TestMustEvalHTMLWithFuncMap(t *testing.T) {
+	revFunc := htmlTemplate.FuncMap{"upper": func(input string) string { return strings.ToUpper(input) }}
+	data := map[string]string{
+		"fruit": "bananas",
+	}
+
+	var tests = []struct {
+		input    string
+		funcMap  htmlTemplate.FuncMap
+		data     interface{}
+		expected string
+	}{
+		{"no replacement", revFunc, data, "no replacement"},
+		{`abc{{ "dEf" | upper }}ghi`, revFunc, data, "abcDEFghi"},
+		{`I want {{ upper .fruit }}.`, revFunc, data, "I want BANANAS."},
+	}
+
+	for _, tt := range tests {
+		actual := MustEvalHTMLWithFuncMap(tt.input, tt.funcMap, tt.data)
 		assert.Equal(t, tt.expected, actual, "they should be equal")
 	}
 }
