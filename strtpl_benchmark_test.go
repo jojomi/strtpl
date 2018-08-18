@@ -16,7 +16,7 @@ func BenchmarkEval(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		for _, tt := range tests {
-			Eval(tt.input, tt.data)
+			_, _ = Eval(tt.input, tt.data)
 		}
 	}
 }
@@ -33,7 +33,7 @@ func BenchmarkEvalHTML(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		for _, tt := range tests {
-			EvalHTML(tt.input, tt.data)
+			_, _ = EvalHTML(tt.input, tt.data)
 		}
 	}
 }
