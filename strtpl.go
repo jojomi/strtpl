@@ -24,12 +24,7 @@ func Eval(templateString string, data interface{}) (output string, err error) {
 // MustEval applies Golang's text templating functions on a string with given data and returns the resulting string.
 // In case of errors on the way, this function panics.
 func MustEval(templateString string, data interface{}) (output string) {
-	var err error
-	output, err = Eval(templateString, data)
-	if err != nil {
-		panic(err)
-	}
-	return output
+	return must(Eval(templateString, data))
 }
 
 // EvalHTML applies Golang's html templating functions on a string with given data and returns the resulting string.
@@ -50,8 +45,10 @@ func EvalHTML(templateString string, data interface{}) (output string, err error
 // MustEvalHTML applies Golang's html templating functions on a string with given data and returns the resulting string.
 // In case of errors on the way, this function panics.
 func MustEvalHTML(templateString string, data interface{}) (output string) {
-	var err error
-	output, err = EvalHTML(templateString, data)
+	return must(EvalHTML(templateString, data))
+}
+
+func must(output string, err error) string {
 	if err != nil {
 		panic(err)
 	}
