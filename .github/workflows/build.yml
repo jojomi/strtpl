@@ -28,3 +28,8 @@ jobs:
         uses: n8maninger/action-golang-test@v1
         with:
           skip-go-install: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v2.5.2
+        with:
+          skip-go-installation: true

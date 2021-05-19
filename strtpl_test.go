@@ -11,7 +11,7 @@ import (
 )
 
 func TestWithoutReplacement(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input    string
 		data     interface{}
 		expected string
@@ -30,7 +30,7 @@ func TestWithoutReplacement(t *testing.T) {
 }
 
 func TestReplacement(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input    string
 		data     interface{}
 		expected string
@@ -48,7 +48,7 @@ func TestReplacement(t *testing.T) {
 }
 
 func TestAdvanced(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input    string
 		data     interface{}
 		expected string
@@ -77,7 +77,7 @@ func TestAdvanced(t *testing.T) {
 }
 
 func TestAdvancedHTML(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input      string
 		data       interface{}
 		expected   string
@@ -96,7 +96,7 @@ func TestAdvancedHTML(t *testing.T) {
 }
 
 func TestWithInvalidTemplate(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input string
 	}{
 		{"Not valid for parser {{ .Data }"},
@@ -109,7 +109,7 @@ func TestWithInvalidTemplate(t *testing.T) {
 }
 
 func TestWithInvalidData(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input string
 		data  interface{}
 	}{
@@ -124,7 +124,7 @@ func TestWithInvalidData(t *testing.T) {
 }
 
 func TestMustEval(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input    string
 		data     interface{}
 		expected string
@@ -148,7 +148,7 @@ func TestMustEvalFail(t *testing.T) {
 }
 
 func TestMustEvalHTML(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		input    string
 		data     interface{}
 		expected string
@@ -163,12 +163,14 @@ func TestMustEvalHTML(t *testing.T) {
 }
 
 func TestMustEvalWithFuncMap(t *testing.T) {
-	revFunc := textTemplate.FuncMap{"upper": func(input string) string { return strings.ToUpper(input) }}
+	revFunc := textTemplate.FuncMap{
+		"upper": strings.ToUpper,
+	}
 	data := map[string]string{
 		"fruit": "bananas",
 	}
 
-	var tests = []struct {
+	tests := []struct {
 		input    string
 		funcMap  textTemplate.FuncMap
 		data     interface{}
@@ -186,12 +188,14 @@ func TestMustEvalWithFuncMap(t *testing.T) {
 }
 
 func TestMustEvalHTMLWithFuncMap(t *testing.T) {
-	revFunc := htmlTemplate.FuncMap{"upper": func(input string) string { return strings.ToUpper(input) }}
+	revFunc := htmlTemplate.FuncMap{
+		"upper": strings.ToUpper,
+	}
 	data := map[string]string{
 		"fruit": "bananas",
 	}
 
-	var tests = []struct {
+	tests := []struct {
 		input    string
 		funcMap  htmlTemplate.FuncMap
 		data     interface{}

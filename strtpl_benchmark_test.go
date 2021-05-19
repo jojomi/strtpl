@@ -5,7 +5,9 @@ import (
 )
 
 func BenchmarkEval(b *testing.B) {
-	var tests = []struct {
+	var err error
+
+	tests := []struct {
 		input string
 		data  interface{}
 	}{
@@ -16,13 +18,16 @@ func BenchmarkEval(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		for _, tt := range tests {
-			_, _ = Eval(tt.input, tt.data)
+			_, err = Eval(tt.input, tt.data)
+			_ = err
 		}
 	}
 }
 
 func BenchmarkEvalHTML(b *testing.B) {
-	var tests = []struct {
+	var err error
+
+	tests := []struct {
 		input string
 		data  interface{}
 	}{
@@ -33,7 +38,8 @@ func BenchmarkEvalHTML(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		for _, tt := range tests {
-			_, _ = EvalHTML(tt.input, tt.data)
+			_, err = EvalHTML(tt.input, tt.data)
+			_ = err
 		}
 	}
 }

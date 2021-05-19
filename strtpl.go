@@ -53,33 +53,42 @@ func must(output string, err error) string {
 	if err != nil {
 		panic(err)
 	}
+
 	return output
 }
 
 func evalTextTemplate(templateString string, funcMap textTemplate.FuncMap, data interface{}) (output string, err error) {
 	var outputBuffer bytes.Buffer
+
 	t, err := textTemplate.New("tmpl").Funcs(funcMap).Parse(templateString)
 	if err != nil {
 		return
 	}
+
 	err = t.Execute(&outputBuffer, data)
 	if err != nil {
 		return
 	}
+
 	output = outputBuffer.String()
+
 	return
 }
 
 func evalHTMLTemplate(templateString string, funcMap htmlTemplate.FuncMap, data interface{}) (output string, err error) {
 	var outputBuffer bytes.Buffer
+
 	t, err := htmlTemplate.New("tmpl").Funcs(funcMap).Parse(templateString)
 	if err != nil {
 		return
 	}
+
 	err = t.Execute(&outputBuffer, data)
 	if err != nil {
 		return
 	}
+
 	output = outputBuffer.String()
+
 	return
 }
