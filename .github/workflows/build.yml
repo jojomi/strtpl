@@ -30,6 +30,6 @@ jobs:
           skip-go-install: true
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3.3.1
+        uses: golangci/golangci-lint-action@v3.4.0
         with:
           skip-go-installation: true
